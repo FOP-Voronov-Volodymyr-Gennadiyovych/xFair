@@ -1,0 +1,12 @@
+# Option 1: Windows SDK (includes signtool)
+# Download from: https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/
+
+# Option 2: Install cryptography library
+pip install cryptography
+
+# Option 3: Install pywin32
+pip install pywin32
+
+# Option 4: Install osslsigncode
+# For Windows: Download from https://github.com/mtrojnar/osslsigncode/releases
+# Or via package manager on Linux
