@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#151918">
+    <meta
+      name="description"
+      content="A browsable image search API powered by Wikimedia Commons."
+    >
+    <title>Framefinder - Image Search API</title>
+    <link
+      rel="icon"
+      href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII="
+    >
+    <link rel="preconnect" href="https://upload.wikimedia.org">
+    <link rel="stylesheet" href="/styles.css">
+    <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="Framefinder home">
+        <span class="brand-mark"><i data-lucide="scan-search"></i></span>
+        <span>
+          <strong>Framefinder</strong>
+          <small>Image search API</small>
+        </span>
+      </a>
+      <a class="recent-link" href="#recent-searches">
+        <i data-lucide="history"></i>
+        Recent searches
+      </a>
+    </header>
+
+    <main>
+      <section class="search-band" aria-labelledby="page-title">
+        <div class="search-heading">
+          <p class="eyebrow">Wikimedia Commons / Open media</p>
+          <h1 id="page-title">Image Search</h1>
+        </div>
+
+        <form class="search-form" id="search-form" role="search">
+          <label class="sr-only" for="search-input">Search for images</label>
+          <div class="search-control">
+            <i data-lucide="search" aria-hidden="true"></i>
+            <input
+              id="search-input"
+              name="q"
+              type="search"
+              placeholder="Search open images..."
+              autocomplete="off"
+              required
+            >
+          </div>
+          <button type="submit">
+            Search
+            <i data-lucide="arrow-right"></i>
+          </button>
+        </form>
+
+        <div class="endpoint-line">
+          <span class="method">GET</span>
+          <code id="endpoint-preview">/query/aurora?page=1</code>
+          <button id="copy-endpoint" type="button" aria-label="Copy API endpoint" title="Copy API endpoint">
+            <i data-lucide="copy"></i>
+          </button>
+        </div>
+      </section>
+
+      <section class="results-section" aria-labelledby="results-heading">
+        <div class="results-toolbar">
+          <div>
+            <p class="eyebrow">Search response</p>
+            <h2 id="results-heading">Results</h2>
+          </div>
+          <p id="results-status" role="status" aria-live="polite">Loading images...</p>
+        </div>
+
+        <div class="image-grid" id="image-grid" aria-live="polite"></div>
+
+        <div class="empty-state" id="empty-state" hidden>
+          <i data-lucide="image-off"></i>
+          <h3>No images found</h3>
+          <p>Try a shorter or broader search.</p>
+        </div>
+
+        <nav class="pagination" aria-label="Search result pages">
+          <button id="previous-page" type="button">
+            <i data-lucide="arrow-left"></i>
+            Previous
+          </button>
+          <span id="page-indicator">Page 1</span>
+          <button id="next-page" type="button">
+            Next
+            <i data-lucide="arrow-right"></i>
+          </button>
+        </nav>
+      </section>
+
+      <section class="recent-section" id="recent-searches" aria-labelledby="recent-heading">
+        <div class="recent-heading">
+          <div>
+            <p class="eyebrow">Request log</p>
+            <h2 id="recent-heading">Recent searches</h2>
+          </div>
+          <a href="/recent/" target="_blank" rel="noreferrer">
+            JSON response
+            <i data-lucide="braces"></i>
+          </a>
+        </div>
+        <ol class="recent-list" id="recent-list"></ol>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>Open imagery from Wikimedia Commons.</span>
+      <a href="https://commons.wikimedia.org/" target="_blank" rel="noreferrer">
+        Commons
+        <i data-lucide="arrow-up-right"></i>
+      </a>
+    </footer>
+  </body>
+</html>
