@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#171b1c">
+    <meta name="description" content="Inspect your IP address, language preferences, and browser user agent.">
+    <title>Signal / Request Header Parser</title>
+    <link rel="stylesheet" href="/styles.css?v=signal-1">
+    <script src="/app.js?v=signal-1" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="Signal home">
+        <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span>Signal</span>
+      </a>
+      <a class="endpoint-link" href="/api/whoami" target="_blank" rel="noreferrer">
+        /api/whoami <span aria-hidden="true">&#8599;</span>
+      </a>
+    </header>
+
+    <main>
+      <section class="intro" aria-labelledby="page-title">
+        <p class="eyebrow">Request header parser</p>
+        <h1 id="page-title">Your request,<br>decoded.</h1>
+        <div class="intro-meta">
+          <span class="live-dot" aria-hidden="true"></span>
+          <span id="request-status" role="status" aria-live="polite">Reading headers</span>
+          <button id="refresh-button" type="button">Refresh</button>
+        </div>
+      </section>
+
+      <section class="header-results" aria-label="Detected request headers">
+        <article class="result result-ip">
+          <div class="result-index">01</div>
+          <div>
+            <h2>IP address</h2>
+            <p id="ipaddress">-</p>
+          </div>
+        </article>
+
+        <article class="result">
+          <div class="result-index">02</div>
+          <div>
+            <h2>Accepted languages</h2>
+            <p id="language">-</p>
+          </div>
+        </article>
+
+        <article class="result result-wide">
+          <div class="result-index">03</div>
+          <div>
+            <h2>Software</h2>
+            <p id="software">-</p>
+          </div>
+        </article>
+      </section>
+
+      <section class="response" aria-labelledby="response-title">
+        <div class="response-heading">
+          <div>
+            <p class="eyebrow">Raw response</p>
+            <h2 id="response-title">JSON</h2>
+          </div>
+          <button id="copy-button" type="button">Copy</button>
+        </div>
+        <pre><code id="json-output">{
+  "ipaddress": "",
+  "language": "",
+  "software": ""
+}</code></pre>
+      </section>
+    </main>
+
+    <footer>
+      <span>freeCodeCamp Back End Development and APIs</span>
+      <a href="https://www.freecodecamp.org/" target="_blank" rel="noreferrer">freeCodeCamp.org</a>
+    </footer>
+  </body>
+</html>
