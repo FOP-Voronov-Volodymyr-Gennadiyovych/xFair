@@ -1,19 +1,27 @@
 import express from "express";
 import cors from "cors";
 import multer from "multer";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const upload = multer();
 
-// разрешаем CORS для freeCodeCamp
+// Разрешаем CORS для freeCodeCamp
 app.use(cors());
-app.use(express.static("public"));
 
+// Папка public
+app.use(express.static(path.join(__dirname, "public")));
+
+// Главная страница
 app.get("/", (req, res) => {
-  res.sendFile(process.cwd() + "/public/index.html");
+  res.sendFile(path.join(__dirname, "public/index.html"));
 });
 
-// основной маршрут для проверки
+// Основной маршрут для теста
 app.post("/api/fileanalyse", upload.single("upfile"), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: "No file provided in upfile field" });
@@ -22,10 +30,11 @@ app.post("/api/fileanalyse", upload.single("upfile"), (req, res) => {
   res.json({
     name: req.file.originalname,
     type: req.file.mimetype,
-    size: req.file.size,
+    size: req.file.size
   });
 });
 
+// Запуск сервера
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`File Metadata Microservice listening on port ${port}`);
