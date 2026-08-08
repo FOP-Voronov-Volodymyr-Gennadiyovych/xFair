@@ -240,6 +240,12 @@ export function createAppServer({
         return;
       }
 
+      if (pathname === "/favicon.ico") {
+        response.writeHead(204, { "Cache-Control": "public, max-age=86400" });
+        response.end();
+        return;
+      }
+
       if (pathname === "/recent" || pathname === "/recent/") {
         sendJson(response, 200, recentStore.list());
         return;
