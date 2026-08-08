@@ -1,0 +1,11 @@
+tasks:
+  install-dependencies:
+    name: Install dependencies
+    command: |
+      sudo apt-get update
+      sudo apt-get install -y osslsigncode
+      python -m pip install --user cryptography
+    triggeredBy:
+      - manual
+      - postDevcontainerStart
+      - prebuild

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#10241d">
+    <meta name="description" content="Convert dates and Unix milliseconds with a simple timestamp API.">
+    <title>Epoch / Timestamp API</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="Epoch home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>Epoch</span>
+      </a>
+      <a class="api-link" href="/api/" target="_blank" rel="noreferrer">API <span aria-hidden="true">&#8599;</span></a>
+    </header>
+
+    <main>
+      <section class="converter" aria-labelledby="page-title">
+        <div class="intro">
+          <p class="eyebrow">Timestamp microservice</p>
+          <h1 id="page-title">One moment.<br>Two formats.</h1>
+          <p class="lede">Enter a GMT date or Unix time in milliseconds.</p>
+        </div>
+
+        <form id="timestamp-form">
+          <label for="date-input">Date or Unix timestamp</label>
+          <div class="input-row">
+            <input
+              id="date-input"
+              name="date"
+              type="text"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder="2015-12-25"
+            >
+            <button type="submit">Convert</button>
+          </div>
+          <div class="quick-actions" aria-label="Example timestamps">
+            <button type="button" data-value="2015-12-25">Date example</button>
+            <button type="button" data-value="1451001600000">Unix example</button>
+            <button type="button" data-value="">Current time</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="response-section" aria-labelledby="response-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">JSON response</p>
+            <h2 id="response-title">Result</h2>
+          </div>
+          <span class="status" id="status" role="status" aria-live="polite">Ready</span>
+        </div>
+
+        <dl class="result-grid" id="result-grid">
+          <div>
+            <dt>Unix milliseconds</dt>
+            <dd id="unix-result">-</dd>
+          </div>
+          <div>
+            <dt>UTC string</dt>
+            <dd id="utc-result">-</dd>
+          </div>
+        </dl>
+
+        <div class="request-line">
+          <span>GET</span>
+          <code id="request-path">/api/</code>
+          <a id="open-request" href="/api/" target="_blank" rel="noreferrer" aria-label="Open JSON response">&#8599;</a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>freeCodeCamp Back End Development and APIs</span>
+      <a href="https://www.freecodecamp.org/" target="_blank" rel="noreferrer">freeCodeCamp.org</a>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#15201c">
+    <meta name="description" content="Create users, record exercises, and query date-filtered training logs.">
+    <title>Tempo / Exercise Tracker</title>
+    <link rel="stylesheet" href="/styles.css?v=tempo-1">
+    <script src="/app.js?v=tempo-1" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="Tempo home">
+        <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span>Tempo</span>
+      </a>
+      <a href="/api/users" target="_blank" rel="noreferrer">API / users <span aria-hidden="true">&#8599;</span></a>
+    </header>
+
+    <main>
+      <section class="intro" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">Exercise tracker</p>
+          <h1 id="page-title">Every session.<br>One clear log.</h1>
+        </div>
+        <form id="user-form" class="compact-form">
+          <label for="username">Create user</label>
+          <div class="input-action">
+            <input id="username" name="username" type="text" placeholder="Username" required>
+            <button type="submit">Add</button>
+          </div>
+          <p id="user-status" role="status" aria-live="polite">Start with a user profile</p>
+        </form>
+      </section>
+
+      <section class="workspace" aria-label="Exercise workspace">
+        <div class="workspace-heading">
+          <div>
+            <p class="eyebrow">Active profile</p>
+            <h2>Record exercise</h2>
+          </div>
+          <label class="user-select-label" for="user-select">
+            User
+            <select id="user-select">
+              <option value="">No users yet</option>
+            </select>
+          </label>
+        </div>
+
+        <form id="exercise-form" class="exercise-form">
+          <label for="description">Description
+            <input id="description" name="description" type="text" placeholder="Morning run" required>
+          </label>
+          <label for="duration">Duration / min
+            <input id="duration" name="duration" type="number" min="1" step="1" placeholder="30" required>
+          </label>
+          <label for="date">Date / optional
+            <input id="date" name="date" type="date">
+          </label>
+          <button type="submit" disabled>Add exercise</button>
+        </form>
+        <p class="form-message" id="exercise-status" role="status" aria-live="polite">Select a user to begin</p>
+      </section>
+
+      <section class="log-section" aria-labelledby="log-title">
+        <div class="log-heading">
+          <div>
+            <p class="eyebrow">Training history</p>
+            <h2 id="log-title">Exercise log</h2>
+          </div>
+          <form id="filter-form" class="filters">
+            <label for="from">From<input id="from" name="from" type="date"></label>
+            <label for="to">To<input id="to" name="to" type="date"></label>
+            <label for="limit">Limit<input id="limit" name="limit" type="number" min="0" step="1" placeholder="All"></label>
+            <button type="submit" disabled>Apply</button>
+          </form>
+        </div>
+
+        <div class="log-summary">
+          <span id="log-user">No active user</span>
+          <strong id="log-count">0 sessions</strong>
+        </div>
+        <div class="log-list" id="log-list">
+          <p class="empty-message">Create or select a user to view a log.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>freeCodeCamp Back End Development and APIs</span>
+      <a href="https://www.freecodecamp.org/" target="_blank" rel="noreferrer">freeCodeCamp.org</a>
+    </footer>
+  </body>
+</html>

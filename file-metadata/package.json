@@ -1,0 +1,14 @@
+{
+  "name": "file-metadata-microservice",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A binary-safe freeCodeCamp file metadata microservice and upload client.",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
