@@ -136,6 +136,7 @@ async function serveStatic(request, response, pathname, publicDirectory) {
   const [fileName, contentType] = file;
   const contents = await readFile(path.join(publicDirectory, fileName));
   response.writeHead(200, {
+    "Access-Control-Allow-Origin": "*",
     "Cache-Control": fileName.endsWith(".html") ? "no-cache" : "public, max-age=3600",
     "Content-Length": contents.length,
     "Content-Type": contentType,
@@ -195,6 +196,7 @@ export function createAppServer({
           return;
         }
         response.writeHead(302, {
+          "Access-Control-Allow-Origin": "*",
           "Cache-Control": "no-store",
           Location: record.original_url,
         });

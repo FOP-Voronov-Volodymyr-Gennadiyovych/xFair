@@ -101,7 +101,14 @@ describe("short URL API", () => {
   it("redirects a short code to its original URL", async () => {
     const response = await fetch(`${baseUrl}/api/shorturl/1`, { redirect: "manual" });
     assert.equal(response.status, 302);
+    assert.equal(response.headers.get("access-control-allow-origin"), "*");
     assert.equal(response.headers.get("location"), "https://example.com/guide");
+  });
+
+  it("allows the redirected homepage to be read cross-origin", async () => {
+    const response = await fetch(baseUrl);
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get("access-control-allow-origin"), "*");
   });
 
   it("returns the required error for invalid input", async () => {
