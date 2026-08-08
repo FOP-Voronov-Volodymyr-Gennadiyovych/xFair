@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#13201b">
+    <meta name="description" content="Create persistent short links for valid HTTP and HTTPS URLs.">
+    <title>Shortline / URL Shortener</title>
+    <link rel="stylesheet" href="/styles.css?v=shortline-1">
+    <script src="/app.js?v=shortline-1" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="Shortline home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>Shortline</span>
+      </a>
+      <span class="endpoint">POST /api/shorturl</span>
+    </header>
+
+    <main>
+      <section class="shortener" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">URL shortener microservice</p>
+          <h1 id="page-title">Long URL.<br>Short route.</h1>
+        </div>
+
+        <form id="shorten-form" method="post" action="/api/shorturl">
+          <label for="url-input">Destination URL</label>
+          <div class="input-row">
+            <input
+              id="url-input"
+              name="url"
+              type="url"
+              inputmode="url"
+              autocomplete="url"
+              placeholder="https://www.freecodecamp.org/"
+              required
+            >
+            <button type="submit">Shorten</button>
+          </div>
+          <p class="form-status" id="form-status" role="status" aria-live="polite">HTTP and HTTPS destinations</p>
+        </form>
+      </section>
+
+      <section class="result" id="result" aria-labelledby="result-title" hidden>
+        <div class="result-heading">
+          <div>
+            <p class="eyebrow">Created link</p>
+            <h2 id="result-title">Ready to use</h2>
+          </div>
+          <span id="response-status">200 OK</span>
+        </div>
+
+        <div class="link-output">
+          <a id="short-link" href="#" target="_blank" rel="noreferrer">-</a>
+          <button id="copy-button" type="button">Copy</button>
+        </div>
+
+        <dl>
+          <div>
+            <dt>Original URL</dt>
+            <dd id="original-url">-</dd>
+          </div>
+          <div>
+            <dt>Short code</dt>
+            <dd id="short-code">-</dd>
+          </div>
+        </dl>
+
+        <pre><code id="json-output"></code></pre>
+      </section>
+    </main>
+
+    <footer>
+      <span>freeCodeCamp Back End Development and APIs</span>
+      <a href="https://www.freecodecamp.org/" target="_blank" rel="noreferrer">freeCodeCamp.org</a>
+    </footer>
+  </body>
+</html>
