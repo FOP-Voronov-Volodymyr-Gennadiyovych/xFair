@@ -146,7 +146,7 @@ export function createAppServer({ publicDirectory = PUBLIC_DIRECTORY } = {}) {
         return;
       }
 
-      const isUploadPath = ["/api/fileanalyse", "/api/fileanalyse/", "/api/fileanalyze", "/api/fileanalyze/"].includes(pathname);
+      const isUploadPath = "/api/fileanalyse";
       if (isUploadPath && request.method === "POST") {
         const contentType = request.headers["content-type"] || "";
         const boundary = extractBoundary(contentType);
