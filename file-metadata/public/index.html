@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#15201c">
+    <meta name="description" content="Inspect a file's name, MIME type, and exact size in bytes.">
+    <title>Filemark / Metadata Microservice</title>
+    <link rel="stylesheet" href="/styles.css?v=filemark-1">
+    <script src="/app.js?v=filemark-1" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="Filemark home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>Filemark</span>
+      </a>
+      <span class="endpoint">POST /api/fileanalyse</span>
+    </header>
+
+    <main>
+      <section class="upload-section" aria-labelledby="page-title">
+        <div class="intro">
+          <p class="eyebrow">File metadata microservice</p>
+          <h1 id="page-title">Know what<br>you dropped.</h1>
+          <p class="lede">Name, media type, and exact byte size.</p>
+        </div>
+
+        <form
+          id="upload-form"
+          action="/api/fileanalyse"
+          method="post"
+          enctype="multipart/form-data"
+        >
+          <label class="drop-zone" id="drop-zone" for="upfile">
+            <input id="upfile" name="upfile" type="file" required>
+            <span class="drop-icon" aria-hidden="true">&#8593;</span>
+            <strong id="file-name">Choose a file</strong>
+            <span id="file-preview">or drop it here</span>
+          </label>
+          <button type="submit">Inspect file</button>
+          <p id="upload-status" role="status" aria-live="polite">Maximum upload size: 25 MB</p>
+        </form>
+      </section>
+
+      <section class="result" id="result" aria-labelledby="result-title" hidden>
+        <div class="result-heading">
+          <div>
+            <p class="eyebrow">Upload response</p>
+            <h2 id="result-title">File details</h2>
+          </div>
+          <span id="response-status">200 OK</span>
+        </div>
+
+        <dl>
+          <div>
+            <dt>Name</dt>
+            <dd id="result-name">-</dd>
+          </div>
+          <div>
+            <dt>Media type</dt>
+            <dd id="result-type">-</dd>
+          </div>
+          <div>
+            <dt>Size</dt>
+            <dd><strong id="result-size">-</strong> bytes</dd>
+          </div>
+        </dl>
+
+        <pre><code id="json-output"></code></pre>
+      </section>
+    </main>
+
+    <footer>
+      <span>freeCodeCamp Back End Development and APIs</span>
+      <a href="https://www.freecodecamp.org/" target="_blank" rel="noreferrer">freeCodeCamp.org</a>
+    </footer>
+  </body>
+</html>
