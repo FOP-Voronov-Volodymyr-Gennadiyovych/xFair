@@ -121,8 +121,9 @@ async function serveStatic(request, response, pathname, publicDirectory) {
 export function createAppServer({ publicDirectory = PUBLIC_DIRECTORY } = {}) {
   return createHttpServer(async (request, response) => {
     try {
-      const requestUrl = new URL(request.url, `http://${request.headers.host || "localhost"}`);
-      const { pathname } = requestUrl;
+      const normalizedRequestTarget = request.url.replace(/^\/{2,}/, "/");
+      const requestUrl = new URL(normalizedRequestTarget, `http://${request.headers.host || "localhost"}`);
+      const pathname = requestUrl.pathname.replace(/\/{2,}/g, "/");
 
       if (request.method === "OPTIONS") {
         response.writeHead(204, {

@@ -104,6 +104,17 @@ describe("file metadata API", () => {
     });
   });
 
+  it("accepts the doubled slash produced from a trailing-slash solution URL", async () => {
+    const form = new FormData();
+    form.append("upfile", new Blob(["icon"], { type: "image/png" }), "icon");
+    const response = await fetch(`${baseUrl}//api/fileanalyse`, { method: "POST", body: form });
+    assert.deepEqual(await response.json(), {
+      name: "icon",
+      type: "image/png",
+      size: 4,
+    });
+  });
+
   it("rejects a multipart form without upfile", async () => {
     const form = new FormData();
     form.append("other", new Blob(["nope"], { type: "text/plain" }), "wrong.txt");
