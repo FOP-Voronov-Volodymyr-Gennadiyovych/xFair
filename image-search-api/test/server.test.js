@@ -115,4 +115,14 @@ describe("image search abstraction layer", () => {
     assert.equal(response.status, 200);
     assert.match(await response.text(), /Framefinder/);
   });
+
+  it("serves a public source index and project files", async () => {
+    const indexResponse = await fetch(`${baseUrl}/source/`);
+    const sourceResponse = await fetch(`${baseUrl}/source/server.js`);
+
+    assert.equal(indexResponse.status, 200);
+    assert.match(await indexResponse.text(), /Source Code/);
+    assert.equal(sourceResponse.status, 200);
+    assert.match(await sourceResponse.text(), /createAppServer/);
+  });
 });

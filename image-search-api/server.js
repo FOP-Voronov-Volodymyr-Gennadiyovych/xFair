@@ -17,6 +17,16 @@ const CONTENT_TYPES = {
   ".js": "text/javascript; charset=utf-8",
 };
 
+const SOURCE_FILES = {
+  "/source/README.md": "README.md",
+  "/source/package.json": "package.json",
+  "/source/server.js": "server.js",
+  "/source/public/app.js": "public/app.js",
+  "/source/public/index.html": "public/index.html",
+  "/source/public/styles.css": "public/styles.css",
+  "/source/test/server.test.js": "test/server.test.js",
+};
+
 export class RecentSearchStore {
   constructor(filePath = DEFAULT_RECENT_FILE, limit = MAX_RECENT_SEARCHES) {
     this.filePath = filePath;
@@ -166,6 +176,8 @@ async function serveStatic(request, response, publicDirectory, pathname) {
   const staticFiles = {
     "/": "index.html",
     "/app.js": "app.js",
+    "/source": "source.html",
+    "/source/": "source.html",
     "/styles.css": "styles.css",
   };
   const fileName = staticFiles[pathname];
@@ -181,6 +193,20 @@ async function serveStatic(request, response, publicDirectory, pathname) {
   });
   if (request.method === "HEAD") response.end();
   else response.end(contents);
+  return true;
+}
+
+async function serveSource(response, pathname) {
+  const relativePath = SOURCE_FILES[pathname];
+  if (!relativePath) return false;
+
+  const contents = await readFile(path.join(APP_DIRECTORY, relativePath));
+  response.writeHead(200, {
+    "Cache-Control": "public, max-age=300",
+    "Content-Length": contents.length,
+    "Content-Type": "text/plain; charset=utf-8",
+  });
+  response.end(contents);
   return true;
 }
 
@@ -234,6 +260,7 @@ export function createAppServer({
         return;
       }
 
+      if (await serveSource(response, pathname)) return;
       if (await serveStatic(request, response, publicDirectory, pathname)) return;
       sendJson(response, 404, { error: "Not found." });
     } catch (error) {
