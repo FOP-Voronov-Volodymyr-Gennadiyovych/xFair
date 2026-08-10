@@ -19,7 +19,11 @@ app.get('/', function (req, res) {
 
 app.post('/api/fileanalyse', upload.single('upfile'), function (req, res) {
   if (!req.file) {
-    return res.status(400).json({ error: 'No file provided in upfile field' });
+    return res.json({
+      name: "",
+      type: "",
+      size: 0
+    });
   }
 
   return res.json({
@@ -31,9 +35,13 @@ app.post('/api/fileanalyse', upload.single('upfile'), function (req, res) {
 
 app.use(function (err, req, res, next) {
   if (err instanceof multer.MulterError) {
-    return res.status(400).json({ error: err.message });
+    return res.json({
+      name: "",
+      type: "",
+      size: 0
+    });
   }
-  return next(err);
+  next(err);
 });
 
 if (require.main === module) {
