@@ -22,7 +22,7 @@ app.get('/api/fileanalyse', (req, res) => {
   res.json({ message: "Send POST with file" });
 });
 
-// REQUIRED FOR FREECODECAMP  
+// REQUIRED FOR FREECODECAMP
 app.post('/api/fileanalyse', upload.single('upfile'), (req, res) => {
   res.json({
     name: req.file?.originalname || "",
