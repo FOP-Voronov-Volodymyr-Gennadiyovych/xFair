@@ -5,10 +5,7 @@ const multer = require('multer');
 require('dotenv').config();
 
 const app = express();
-const upload = multer({
-  storage: multer.memoryStorage(),
-  limits: { fileSize: 25 * 1024 * 1024 }
-});
+const upload = multer({ dest: 'uploads/' });
 
 app.use(cors());
 app.use('/public', express.static(path.join(__dirname, 'public')));
