@@ -5,7 +5,10 @@ const multer = require('multer');
 require('dotenv').config();
 
 const app = express();
-const upload = multer({ dest: 'uploads/' });
+
+// Use memory storage so tests don't need a writable uploads/ directory
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 app.use(cors());
 app.use('/public', express.static(path.join(__dirname, 'public')));
@@ -18,7 +21,6 @@ app.get('/', function (req, res) {
 app.get('/api/fileanalyse', (req, res) => {
   res.json({ message: "Send POST with file" });
 });
-
 
 // REQUIRED FOR FREECODECAMP
 app.post('/api/fileanalyse', upload.single('upfile'), (req, res) => {
@@ -33,9 +35,7 @@ app.post('/api/fileanalyse', upload.single('upfile'), (req, res) => {
   });
 });
 
-
-// REMOVE MULTER ERROR HANDLER — IT BREAKS TESTS
-
+// start only when run directly (test harness can require this file)
 if (require.main === module) {
   const port = process.env.PORT || 3000;
   app.listen(port, function () {
