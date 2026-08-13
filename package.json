@@ -11,11 +11,12 @@
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "multer": "^2.2.0"
+    "multer": "^2.2.0",
+    "morgan": "^1.10.0"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/FOP-Voronov-Volodymyr-Gennadiyovych/xFair/n"
+    "url": "https://github.com/FOP-Voronov-Volodymyr-Gennadiyovych/xFair"
   },
   "keywords": [
     "node",
