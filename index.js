@@ -14,6 +14,9 @@ app.get('/', function (req, res) {
 /*-----------------------------------------------------------------------------------------*/
 /*---------------------------------------MY CODE-------------------------------------------*/
 /*-----------------------------------------------------------------------------------------*/
+// Use memory storage so tests don't need a writable uploads/ directory
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 app.post('/api/fileanalyse', upload.single('upfile'), (req, res) => {
   if (!req.file) {
