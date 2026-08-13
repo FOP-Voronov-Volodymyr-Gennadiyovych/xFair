@@ -22,16 +22,27 @@ app.get('/api/fileanalyse', (req, res) => {
   res.json({ message: "Send POST with file" });
 });
 
-// REQUIRED FOR FREECODECAMP
+// inside index.js (replace the POST handler)
 app.post('/api/fileanalyse', upload.single('upfile'), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: "No file uploaded" });
   }
 
-  res.json({
-    name: req.file.originalname,
-    type: req.file.mimetype,
-    size: req.file.size
+  // Debugging: uncomment during local testing to inspect what multer produced
+  // console.log('MULTER REQ.FILE:', req.file);
+
+  // Some multer versions/platforms may not populate size; fallback to buffer length if needed
+  const size = typeof req.file.size === 'number'
+    ? req.file.size
+    : (req.file.buffer && req.file.buffer.length) || 0;
+
+  // Ensure size is a number (not string)
+  const sizeNumber = Number(size);
+
+  return res.json({
+    name: req.file.originalname || '',
+    type: req.file.mimetype || '',
+    size: sizeNumber
   });
 });
 
