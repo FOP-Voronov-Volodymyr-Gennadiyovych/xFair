@@ -51,14 +51,15 @@ app.post('/api/fileanalyse', upload.single('upfile'), (req, res) => {
   console.log('Response JSON:', result);
 
   // Check if this is an AJAX request
-  const isAjax = req.headers['x-requested-with'] === 'XMLHttpRequest' || 
-                 req.headers['accept']?.includes('application/json');
+  const isAjax = req.headers['x-requested-with'] === 'XMLHttpRequest';
 
   if (isAjax) {
     // If AJAX, return JSON
+    console.log('Returning JSON for AJAX request');
     return res.json(result);
   } else {
     // If regular form submission, return HTML with JSON embedded
+    console.log('Returning HTML for form submission');
     const html = `
 <!DOCTYPE html>
 <html>
@@ -87,10 +88,11 @@ app.post('/api/fileanalyse', upload.single('upfile'), (req, res) => {
   
   <script>
     window.fileMetadata = ${JSON.stringify(result)};
+    console.log('File metadata loaded:', window.fileMetadata);
     
     function handleSubmit(event) {
       event.preventDefault();
-      console.log('Form submitted');
+      console.log('Form submitted via AJAX');
       
       const fileInput = document.getElementById('inputfield');
       const output = document.getElementById('output');
@@ -135,6 +137,7 @@ app.post('/api/fileanalyse', upload.single('upfile'), (req, res) => {
 </body>
 </html>
     `;
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
     return res.send(html);
   }
 });
