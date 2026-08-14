@@ -18,7 +18,7 @@
         </p>
         <div class="view">
           <h4 id="output"></h4>
-          <form id="fileForm" enctype="multipart/form-data" onsubmit="handleSubmit(event)">
+          <form id="fileForm" enctype="multipart/form-data">
             <input id="inputfield" type="file" name="upfile" required>
             <input id="button" type="submit" value="Upload">
           </form>
@@ -32,45 +32,52 @@
       </div>
 
       <script>
-        function handleSubmit(event) {
-          event.preventDefault();
-          console.log('Form submitted');
-          
-          const fileInput = document.getElementById('inputfield');
+        document.addEventListener('DOMContentLoaded', function() {
+          const form = document.getElementById('fileForm');
           const output = document.getElementById('output');
-          
-          if (!fileInput.files.length) {
-            output.textContent = 'Please select a file';
-            return false;
-          }
 
-          const formData = new FormData();
-          formData.append('upfile', fileInput.files[0]);
-          
-          console.log('Sending file:', fileInput.files[0].name);
-          
-          fetch('/api/fileanalyse', {
-            method: 'POST',
-            body: formData
-          })
-          .then(response => {
-            console.log('Response status:', response.status);
-            if (!response.ok) {
-              throw new Error('Upload failed with status ' + response.status);
+          form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            console.log('Form submit intercepted');
+            
+            const fileInput = document.getElementById('inputfield');
+            if (!fileInput.files.length) {
+              output.textContent = 'Please select a file';
+              return false;
             }
-            return response.json();
-          })
-          .then(data => {
-            console.log('Response data:', data);
-            output.textContent = JSON.stringify(data);
-          })
-          .catch(error => {
-            console.error('Error:', error);
-            output.textContent = 'Error: ' + error.message;
+
+            const formData = new FormData();
+            formData.append('upfile', fileInput.files[0]);
+            
+            console.log('Sending AJAX request with file:', fileInput.files[0].name);
+            
+            fetch('/api/fileanalyse', {
+              method: 'POST',
+              body: formData,
+              headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+              }
+            })
+            .then(response => {
+              console.log('Got response:', response.status);
+              if (!response.ok) {
+                throw new Error('Upload failed');
+              }
+              return response.json();
+            })
+            .then(data => {
+              console.log('Got data:', data);
+              window.fileMetadata = data;
+              output.textContent = JSON.stringify(data);
+            })
+            .catch(error => {
+              console.error('Fetch error:', error);
+              output.textContent = 'Error: ' + error.message;
+            });
+            
+            return false;
           });
-          
-          return false;
-        }
+        });
       </script>
    </body>
 </html>
