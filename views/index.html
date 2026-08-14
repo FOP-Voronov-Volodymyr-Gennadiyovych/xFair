@@ -18,7 +18,7 @@
         </p>
         <div class="view">
           <h4 id="output"></h4>
-          <form id="fileForm" enctype="multipart/form-data">
+          <form id="fileForm" enctype="multipart/form-data" onsubmit="handleSubmit(event)">
             <input id="inputfield" type="file" name="upfile" required>
             <input id="button" type="submit" value="Upload">
           </form>
@@ -32,29 +32,29 @@
       </div>
 
       <script>
-        const form = document.getElementById('fileForm');
-        const output = document.getElementById('output');
-
-        form.addEventListener('submit', function(e) {
-          e.preventDefault();
+        function handleSubmit(event) {
+          event.preventDefault();
+          console.log('Form submitted');
           
           const fileInput = document.getElementById('inputfield');
+          const output = document.getElementById('output');
+          
           if (!fileInput.files.length) {
             output.textContent = 'Please select a file';
-            return;
+            return false;
           }
 
           const formData = new FormData();
           formData.append('upfile', fileInput.files[0]);
           
+          console.log('Sending file:', fileInput.files[0].name);
+          
           fetch('/api/fileanalyse', {
             method: 'POST',
-            body: formData,
-            headers: {
-              'Accept': 'application/json'
-            }
+            body: formData
           })
           .then(response => {
+            console.log('Response status:', response.status);
             if (!response.ok) {
               throw new Error('Upload failed with status ' + response.status);
             }
@@ -68,7 +68,9 @@
             console.error('Error:', error);
             output.textContent = 'Error: ' + error.message;
           });
-        });
+          
+          return false;
+        }
       </script>
    </body>
 </html>
