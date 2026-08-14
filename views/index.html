@@ -18,7 +18,7 @@
         </p>
         <div class="view">
           <h4 id="output"></h4>
-          <form enctype="multipart/form-data" method="POST" action="/api/fileanalyse">
+          <form id="fileForm" enctype="multipart/form-data">
             <input id="inputfield" type="file" name="upfile">
             <input id="button" type="submit" value="Upload">
           </form>
@@ -30,5 +30,36 @@
           <a href="http://www.freecodecamp.com">freeCodeCamp</a>
         </p>
       </div>
+
+      <script>
+        document.getElementById('fileForm').addEventListener('submit', async function(e) {
+          e.preventDefault();
+          
+          const fileInput = document.getElementById('inputfield');
+          if (!fileInput.files.length) {
+            document.getElementById('output').textContent = 'Please select a file';
+            return;
+          }
+
+          const formData = new FormData();
+          formData.append('upfile', fileInput.files[0]);
+          
+          try {
+            const response = await fetch('/api/fileanalyse', {
+              method: 'POST',
+              body: formData
+            });
+            
+            if (!response.ok) {
+              throw new Error('Upload failed');
+            }
+            
+            const data = await response.json();
+            document.getElementById('output').textContent = JSON.stringify(data);
+          } catch (error) {
+            document.getElementById('output').textContent = 'Error: ' + error.message;
+          }
+        });
+      </script>
    </body>
 </html>
