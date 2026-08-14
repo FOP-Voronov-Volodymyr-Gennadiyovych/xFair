@@ -17,12 +17,100 @@ app.use(morgan('combined'));
 app.use(cors());
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
-// Disable caching for HTML
+// Return HTML directly from server (not from file)
 app.get('/', function (req, res) {
   res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
   res.set('Pragma', 'no-cache');
   res.set('Expires', '0');
-  res.sendFile(path.join(__dirname, 'views', 'index.html'));
+  res.set('Content-Type', 'text/html; charset=utf-8');
+  
+  const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <title>File Metadata</title>
+  <link rel="shortcut icon" href="https://cdn.freecodecamp.org/universal/favicons/favicon-32x32.png" type="image/x-icon"/>
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
+  <link href="/public/style.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+  <div class="container">
+    <h2>API Project: File Metadata Microservice</h2>
+    <h3>Usage:</h3>
+    <p>Please Upload a File ...</p>
+    <div class="view">
+      <h4 id="output"></h4>
+      <form id="fileForm" enctype="multipart/form-data">
+        <input id="inputfield" type="file" name="upfile" required>
+        <input id="button" type="submit" value="Upload">
+      </form>
+    </div>
+  </div>
+  <div class="footer">
+    <p>by <a href="http://www.freecodecamp.com">freeCodeCamp</a></p>
+  </div>
+
+  <script>
+    console.log('Script loaded on page');
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOMContentLoaded fired');
+      const form = document.getElementById('fileForm');
+      const output = document.getElementById('output');
+
+      if (!form) {
+        console.error('Form not found!');
+        return;
+      }
+
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        console.log('Form submit intercepted');
+        
+        const fileInput = document.getElementById('inputfield');
+        if (!fileInput.files.length) {
+          output.textContent = 'Please select a file';
+          return false;
+        }
+
+        const formData = new FormData();
+        formData.append('upfile', fileInput.files[0]);
+        
+        console.log('Sending AJAX request with file:', fileInput.files[0].name);
+        
+        fetch('/api/fileanalyse', {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+          }
+        })
+        .then(response => {
+          console.log('Got response:', response.status);
+          if (!response.ok) {
+            throw new Error('Upload failed');
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log('Got data:', data);
+          window.fileMetadata = data;
+          output.textContent = JSON.stringify(data);
+        })
+        .catch(error => {
+          console.error('Fetch error:', error);
+          output.textContent = 'Error: ' + error.message;
+        });
+        
+        return false;
+      });
+    });
+  </script>
+</body>
+</html>
+  `;
+  
+  res.send(html);
 });
 
 // Helpful GET for quick check
@@ -80,7 +168,7 @@ app.post('/api/fileanalyse', upload.single('upfile'), (req, res) => {
     <p>Please Upload a File ...</p>
     <div class="view">
       <h4 id="output">${JSON.stringify(result)}</h4>
-      <form id="fileForm" enctype="multipart/form-data" onsubmit="handleSubmit(event)">
+      <form id="fileForm" enctype="multipart/form-data">
         <input id="inputfield" type="file" name="upfile" required>
         <input id="button" type="submit" value="Upload">
       </form>
@@ -94,49 +182,52 @@ app.post('/api/fileanalyse', upload.single('upfile'), (req, res) => {
     window.fileMetadata = ${JSON.stringify(result)};
     console.log('File metadata loaded:', window.fileMetadata);
     
-    function handleSubmit(event) {
-      event.preventDefault();
-      console.log('Form submitted via AJAX');
-      
-      const fileInput = document.getElementById('inputfield');
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('fileForm');
       const output = document.getElementById('output');
-      
-      if (!fileInput.files.length) {
-        output.textContent = 'Please select a file';
-        return false;
-      }
 
-      const formData = new FormData();
-      formData.append('upfile', fileInput.files[0]);
-      
-      console.log('Sending file:', fileInput.files[0].name);
-      
-      fetch('/api/fileanalyse', {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'X-Requested-With': 'XMLHttpRequest'
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        console.log('Form submitted via AJAX');
+        
+        const fileInput = document.getElementById('inputfield');
+        if (!fileInput.files.length) {
+          output.textContent = 'Please select a file';
+          return false;
         }
-      })
-      .then(response => {
-        console.log('Response status:', response.status);
-        if (!response.ok) {
-          throw new Error('Upload failed with status ' + response.status);
-        }
-        return response.json();
-      })
-      .then(data => {
-        console.log('Response data:', data);
-        window.fileMetadata = data;
-        output.textContent = JSON.stringify(data);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        output.textContent = 'Error: ' + error.message;
+
+        const formData = new FormData();
+        formData.append('upfile', fileInput.files[0]);
+        
+        console.log('Sending file:', fileInput.files[0].name);
+        
+        fetch('/api/fileanalyse', {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+          }
+        })
+        .then(response => {
+          console.log('Response status:', response.status);
+          if (!response.ok) {
+            throw new Error('Upload failed with status ' + response.status);
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log('Response data:', data);
+          window.fileMetadata = data;
+          output.textContent = JSON.stringify(data);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          output.textContent = 'Error: ' + error.message;
+        });
+        
+        return false;
       });
-      
-      return false;
-    }
+    });
   </script>
 </body>
 </html>
