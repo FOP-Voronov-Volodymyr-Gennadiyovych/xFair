@@ -49,8 +49,94 @@ app.post('/api/fileanalyse', upload.single('upfile'), (req, res) => {
   };
 
   console.log('Response JSON:', result);
-  // Ensure we send JSON with exactly the keys the test expects
-  return res.json(result);
+
+  // Check if this is an AJAX request
+  const isAjax = req.headers['x-requested-with'] === 'XMLHttpRequest' || 
+                 req.headers['accept']?.includes('application/json');
+
+  if (isAjax) {
+    // If AJAX, return JSON
+    return res.json(result);
+  } else {
+    // If regular form submission, return HTML with JSON embedded
+    const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <title>File Metadata</title>
+  <link rel="shortcut icon" href="https://cdn.freecodecamp.org/universal/favicons/favicon-32x32.png" type="image/x-icon"/>
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
+  <link href="/public/style.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+  <div class="container">
+    <h2>API Project: File Metadata Microservice</h2>
+    <h3>Usage:</h3>
+    <p>Please Upload a File ...</p>
+    <div class="view">
+      <h4 id="output">${JSON.stringify(result)}</h4>
+      <form id="fileForm" enctype="multipart/form-data" onsubmit="handleSubmit(event)">
+        <input id="inputfield" type="file" name="upfile" required>
+        <input id="button" type="submit" value="Upload">
+      </form>
+    </div>
+  </div>
+  <div class="footer">
+    <p>by <a href="http://www.freecodecamp.com">freeCodeCamp</a></p>
+  </div>
+  
+  <script>
+    window.fileMetadata = ${JSON.stringify(result)};
+    
+    function handleSubmit(event) {
+      event.preventDefault();
+      console.log('Form submitted');
+      
+      const fileInput = document.getElementById('inputfield');
+      const output = document.getElementById('output');
+      
+      if (!fileInput.files.length) {
+        output.textContent = 'Please select a file';
+        return false;
+      }
+
+      const formData = new FormData();
+      formData.append('upfile', fileInput.files[0]);
+      
+      console.log('Sending file:', fileInput.files[0].name);
+      
+      fetch('/api/fileanalyse', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      })
+      .then(response => {
+        console.log('Response status:', response.status);
+        if (!response.ok) {
+          throw new Error('Upload failed with status ' + response.status);
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('Response data:', data);
+        window.fileMetadata = data;
+        output.textContent = JSON.stringify(data);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        output.textContent = 'Error: ' + error.message;
+      });
+      
+      return false;
+    }
+  </script>
+</body>
+</html>
+    `;
+    return res.send(html);
+  }
 });
 
 // start only when run directly
