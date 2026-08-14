@@ -17,7 +17,11 @@ app.use(morgan('combined'));
 app.use(cors());
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
+// Disable caching for HTML
 app.get('/', function (req, res) {
+  res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.set('Pragma', 'no-cache');
+  res.set('Expires', '0');
   res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
 
